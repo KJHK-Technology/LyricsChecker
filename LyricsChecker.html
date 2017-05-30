@@ -1,0 +1,175 @@
+
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Word Finder</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>Artist <input id="artist" type="text"><br>
+            Album<input id="album" type="text"><br>
+            Song<input id="song" type="text"><br>
+            lyrics<input id="lyrics" type="text"><br>
+            <input type="button" value="Search" onclick="lyricSearch()">
+            <div id="searchResult"></div>
+        </div>
+        <div id="boxes" style="display: inline-block" >
+            <div style="float: left">
+                <div style="float: top">Lyrics here! v1.0.1</div>
+                <textarea id="lyricBox" rows="50" cols="50" style="text-align: center" >Paste your lyrics here.</textarea> 
+            </div>
+            <div style="float: left">
+
+                <div style="float: top"><span style="width: 5px">Will detect anywhere, even subwords.</span></div>
+                <textarea id="anywhereBad" rows="50" cols="10" style="">asshole
+bastard
+bi+tch
+boner
+clit
+cocksucker
+cu+nt
+dickhead
+fu+ck
+nigga
+niggar
+nigger
+pussy
+shi+t</textarea> 
+            </div>
+            <div style="float: left">
+                <div>Must appear by itself to be detected.</div>
+                <textarea id="lonesomeBad" rows="50" cols="10" style="float: left">ass
+co+ck
+di+ck
+di+cks
+pri+ck</textarea> 
+            </div>
+            <span id ="myspan" style="float: left; text-align: center"></span>
+        </div>
+        <script type="text/javascript" src="http://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuOP"></script>
+        <script>
+                function lyricSearch() {
+                    var lyrics = document.getElementById("lyrics").value;
+                    var song = document.getElementById("song").value;
+                    var album = document.getElementById("album").value;
+                    var artist = document.getElementById("artist").value;
+
+                    var trackid = 7260188;
+                   // var xmlHttp = new XMLHttpRequest();
+                    var root = "http://api.musixmatch.com/ws/1.1/";
+                    //xmlHttp.open("GET",root +"track.lyrics.get?apikey=&track_id=15953433"  , false); // false for synchronous request
+                    var key = "";
+                    //xmlHttp.send(null);
+                    
+                  alert("MusicXMatch is too uptight to provide more than 30% of all lyrics to every song. Their USER SUBMITED lyrics they"
+                  + " refuse to share that is. They want a bunch of money.");
+                }
+
+
+
+                anywherebad = [];
+                lonesomebad = [];
+                needRefresh = true;
+                matchstart = '<span style="background-color:red ; font-weight: bold">';
+                matchend = '</span>';
+                function refresh(id) {
+                    var array = (id == "anywhereBad") ? anywherebad : lonesomebad;
+                    //array = null;
+                    var j = 0;
+                    var lines = document.getElementById(id).value.split('\n');
+                    for (var i = 0; i < lines.length; i++) {
+                        if(lines[i].trim().length > 0 ){
+                            array[j++] = lines[i].trim();
+                        }
+                        
+                    }
+                    while(j < array.length){
+                        array[j++] = null;
+                    }
+
+                }
+                goodcolor = "#80ff80";
+                badcolor = "#ffb3b3";
+                resultColor =goodcolor;
+                function func() {
+                    //                alert("key");
+                    if (needRefresh) {
+                        refresh("anywhereBad");
+                        refresh("lonesomeBad");
+                        needRefresh = false;
+                    }
+                    var lines = document.getElementById("lyricBox").value.split('\n');
+                    var str = "<br>";
+                    resultColor = goodcolor;
+                    for (var i = 0; i < lines.length; i++) {
+                        var before = lines[i];
+                        for (var j = 0; j < anywherebad.length; j++) {
+                            var re = new RegExp("(" + anywherebad[j] + ")(?![^<]*>|[^<>]*<\/)", 'ig');
+                            //alert("word is: " + re + "\n" + lines[i].match(re));
+                            var matches = lines[i].match(re);
+                            if (null !== matches) {
+                                 
+                                matches.forEach(function (m) {
+                                   // alert("match: " + m);
+                                    lines[i] = lines[i].replace(new RegExp(m,'g'), matchstart + m + matchend);
+                                });
+                            }
+                        }
+                        for (var j = 0; j < lonesomebad.length; j++) {
+                            var re = new RegExp("((\\W|^|\\s)" + lonesomebad[j] +
+                                    "(\\W|\\s|$))(?![^<]*>|[^<>]*<\/)", 'ig');
+                            //start 
+                            var matches = lines[i].match(re);
+                            if (null !== matches) {
+
+                                matches.forEach(function (m) {
+                                    lines[i] = lines[i].replace(new RegExp(m,'g'), matchstart + m + matchend);
+                                });
+                            }
+
+                            //lines[i] = lines[i].replace(re, matchstart + lonesomebad[j] + matchend);
+                        }
+                        if(lines[i] !==before ){
+                            resultColor = badcolor;
+                        }
+                        str += lines[i] + "<br>";
+                    }
+                    document.getElementById("myspan").style.backgroundColor = resultColor;
+                    document.getElementById("myspan").innerHTML = str;
+                }
+                window.onload = function () {
+                    var txts = document.getElementById("lyricBox");
+
+                    txts.onkeyup = func;
+                    txts.onclick = function () {
+                        this.focus();
+                        this.select();
+                    }
+                    txts.onpaste = function(){
+                        window.setTimeout(func,100);
+                    }
+                    document.getElementById("anywhereBad").onkeyup = function () {
+                        refresh("anywhereBad");
+//                        alert("detected");
+                       // needRefresh = true;
+                       // alert(anywherebad);
+                        func();
+                    }
+                    document.getElementById("lonesomeBad").onkeyup = function () {
+                        refresh("lonesomeBad");
+                        func();
+                    }
+
+                };
+
+        </script>
+
+    </body>
+</html>
