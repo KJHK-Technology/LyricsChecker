@@ -15,25 +15,21 @@ and open the template in the editor.
 </head>
 
 <body>
-    <div class="header input-lyrics-title">
-        Paste your lyrics below.
-    </div>
-    <div class="header input-anywhere-flag">
-        These words will be flagged even if they appear as sub-words.
-    </div>
-    <div class="header input-lonesome-flag">
-        These words will be flagged only if they appear by themselves.
-    </div>
-    <div class="header results-header">
-        Results
-    </div>
 
-    <div>
-        <textarea id="lyricBox" class="lyricsBox inputLyrics filler">Paste your lyrics here.</textarea>
-    </div>
 
-    <div>
-        <textarea id="anywhereBad" class="inputWords filler">asshole
+
+
+    <div class="lyrics-box flex-item">
+        <div class="header input-lyrics-title">
+            Paste your lyrics below.
+        </div>
+        <textarea id="lyricBox" class="lyrics tailer filler">Paste your lyrics here.</textarea>
+    </div>
+    <div class="input-words flex-item">
+        <div class="header input-anywhere-flag">
+            These words will be flagged even if they appear as sub-words.
+        </div>
+        <textarea id="anywhereBad" class="filler tailer">asshole
 bastard
 bi+tch
 boner
@@ -48,15 +44,22 @@ nigger
 pussy
 shi+t</textarea>
     </div>
-    <div>
-
-        <textarea id="lonesomeBad" class="inputWords filler">ass
+    <div class="input-words flex-item">
+        <div class="header input-lonesome-flag">
+            These words will be flagged only if they appear by themselves.
+        </div>
+        <textarea id="lonesomeBad" class="tailer filler">ass
 co+ck
 di+ck
 di+cks
 pri+ck</textarea>
     </div>
-    <div id="myspan" class="lryicsBox filler lyrics-output"></div>
+    <div class="lyrics-box flex-item">
+        <div class="header results-header">
+            Results
+        </div>
+        <div id="myspan" class="tailer filler lyrics lyrics-output"></div>
+    </div>
 
 
     <script src="./main.js" async defer></script>
