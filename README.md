@@ -1,5 +1,7 @@
 # LyricsChecker
-For checking lyrics for naughty words.
+Quickly check a song's lyrics for possible FCC Violations:
+
+It's faster than reading and won't miss words as humans occasionally do!
 
 hosted here: https://paul-kline.github.io/LyricsChecker/
 
